@@ -50,7 +50,13 @@ vim.api.nvim_create_user_command('Freeze', function(o)
   vim.api.nvim_create_autocmd('WinScrolled', {
     group = group,
     pattern = tostring(win),
-    callback = function()
+    callback = function(a)
+      if vim.v.event[a.match].leftcol ~= 0 then
+        local leftcol = vim.fn.getwininfo(win)[1].leftcol
+        vim.api.nvim_win_call(freeze[win], function()
+          vim.fn.winrestview({ leftcol = leftcol })
+        end)
+      end
     end,
   })
   vim.api.nvim_create_autocmd('WinClosed', {

@@ -67,13 +67,14 @@ for _, dir in ipairs({ '', 'V' }) do
       end)
 
       local group = vim.api.nvim_create_augroup('freeze.' .. freeze[dir][win], {})
-      vim.api.nvim_create_autocmd('CursorMoved', {
+      vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
         group = group,
-        buf = buf,
         callback = function()
           local hide
           if win ~= vim.fn.win_getid() then
             return
+          elseif buf ~= vim.api.nvim_win_get_buf(win) then
+            hide = true
           elseif dir == 'V' then
             local w = vim.fn.getwininfo(win)[1]
             hide = vim.fn.wincol() <= width + math.min(1, #config.sep[dir]) + w.textoff
@@ -103,8 +104,7 @@ for _, dir in ipairs({ '', 'V' }) do
           local event = vim.v.event[tostring(win)]
           if not event then
             return
-          end
-          if dir == 'V' and event.topline ~= 0 then
+          elseif dir == 'V' and event.topline ~= 0 then
             local w = vim.fn.getwininfo(win)[1]
             vim.api.nvim_win_call(freeze[dir][win], function()
               vim.api.nvim_win_set_cursor(freeze[dir][win], { w.topline, col1 })

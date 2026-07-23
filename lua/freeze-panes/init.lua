@@ -1,5 +1,5 @@
 local M = {
-  sep = '─',
+  sep = { [''] = '─', ['V'] = '│' },
 }
 
 function M.setup(config)

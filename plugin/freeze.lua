@@ -7,8 +7,7 @@ vim.api.nvim_create_user_command('Freeze', function(o)
   local height = o.line2 - o.line1 + 1
 
   if freeze[win] and vim.api.nvim_win_is_valid(freeze[win]) then
-    vim.api.nvim_win_close(freeze[win], false)
-    vim.api.nvim_del_augroup_by_name('freeze.' .. win)
+    vim.api.nvim_win_close(freeze[win], true)
     if o.range == 0 then
       return
     end
@@ -43,19 +42,22 @@ vim.api.nvim_create_user_command('Freeze', function(o)
   })
   vim.api.nvim_create_autocmd('WinResized', {
     group = group,
+    pattern = tostring(win),
     callback = function()
       vim.api.nvim_win_set_config(freeze[win], { width = vim.api.nvim_win_get_width(win) })
     end,
   })
   vim.api.nvim_create_autocmd('WinScrolled', {
     group = group,
+    pattern = tostring(win),
     callback = function()
     end,
   })
   vim.api.nvim_create_autocmd('WinClosed', {
     group = group,
-    pattern = tostring(win),
+    pattern = { tostring(win), tostring(freeze[win]) },
     callback = function()
+      vim.api.nvim_win_close(freeze[win], false)
       vim.api.nvim_del_augroup_by_id(group)
     end,
   })

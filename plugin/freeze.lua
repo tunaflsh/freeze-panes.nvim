@@ -1,3 +1,4 @@
+local config = require('freeze')
 local freeze
 
 vim.api.nvim_create_user_command('Freeze', function(o)
@@ -18,7 +19,7 @@ vim.api.nvim_create_user_command('Freeze', function(o)
     col = 0,
     width = vim.api.nvim_win_get_width(0),
     height = height,
-    border = { '', '', '', '', '═', '═', '═', '' },
+    border = { '', '', '', '', '', config.sep, '', '' },
     focusable = false,
     noautocmd = true,
     zindex = 99,
@@ -30,7 +31,7 @@ vim.api.nvim_create_user_command('Freeze', function(o)
     buf = buf,
     callback = function()
       vim.api.nvim_win_set_config(freeze, {
-        hide = win == vim.fn.win_getid() and vim.fn.winline() <= height,
+        hide = win == vim.fn.win_getid() and vim.fn.winline() <= height + math.min(1, #config.sep),
       })
     end,
   })

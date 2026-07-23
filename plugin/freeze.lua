@@ -1,18 +1,14 @@
 local config = require('freeze')
 local freeze = {}
 
-local function close(win)
-  vim.api.nvim_win_close(freeze[win], true)
-  vim.api.nvim_del_augroup_by_name('freeze.' .. win)
-end
-
 vim.api.nvim_create_user_command('Freeze', function(o)
   local buf = vim.fn.bufnr()
   local win = vim.fn.win_getid()
   local height = o.line2 - o.line1 + 1
 
   if freeze[win] and vim.api.nvim_win_is_valid(freeze[win]) then
-    close(win)
+    vim.api.nvim_win_close(freeze[win], false)
+    vim.api.nvim_del_augroup_by_name('freeze.' .. win)
     if o.range == 0 then
       return
     end
@@ -30,6 +26,10 @@ vim.api.nvim_create_user_command('Freeze', function(o)
     noautocmd = true,
     zindex = 99,
   })
+  vim.api.nvim_win_call(freeze[win], function()
+    vim.api.nvim_win_set_cursor(0, { o.line1, 0 })
+    vim.fn.winrestview({ topline = o.line1 })
+  end)
 
   local group = vim.api.nvim_create_augroup('freeze.' .. win, {})
   vim.api.nvim_create_autocmd('CursorMoved', {
@@ -55,7 +55,9 @@ vim.api.nvim_create_user_command('Freeze', function(o)
   vim.api.nvim_create_autocmd('WinClosed', {
     group = group,
     pattern = tostring(win),
-    callback = function() close(win) end,
+    callback = function()
+      vim.api.nvim_del_augroup_by_id(group)
+    end,
   })
 end, {
   range = true,

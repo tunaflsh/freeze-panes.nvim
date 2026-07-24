@@ -35,5 +35,5 @@ require('freeze-panes').setup({
 
 ## Usage
 
-- `:Freeze` - Freezes selected lines (or current selection in Visual mode) at the top of the buffer. Calling it again toggles off the existing horizontal freeze.
-- `:VFreeze` - Freezes selected columns at the left side of the buffer. Calling it again toggles off the existing vertical freeze.
+- `:[range]Freeze` - Freezes selected lines (or current selection in Visual mode) at the top of the buffer. Calling it again toggles off the existing horizontal freeze.
+- `:[range]VFreeze` - Freezes selected columns at the left side of the buffer. Calling it again toggles off the existing vertical freeze.

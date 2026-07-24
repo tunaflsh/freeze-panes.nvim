@@ -122,6 +122,7 @@ for _, dir in ipairs({ '', 'V' }) do
           local w = vim.fn.getwininfo(win)[1]
           if buf ~= vim.api.nvim_win_get_buf(win) then
             hide = true
+          elseif vim.fn.foldclosed('.') ~= -1 then
           elseif dir == 'V' then
             hide = vim.fn.wincol() <= width + math.min(1, #config.sep[dir]) + w.textoff
           else

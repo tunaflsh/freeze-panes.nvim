@@ -2,6 +2,8 @@
 
 A Neovim plugin that lets you pin specific lines or columns in place using floating windows.
 
+![Demo](small-demo.gif)
+
 ## Features
 
 - **Horizontal Freeze (`:Freeze`)**: Pin a specific range of lines to the top of the window.
